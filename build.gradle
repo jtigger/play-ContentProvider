@@ -1,0 +1,27 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:2.1.0'
+    }
+}
+
+allprojects {
+    repositories {
+        jcenter()
+    }
+}
+
+ext {
+    // Testing
+    JUNIT_VER = '4.12'
+    MOCKITO_VER = '1.10.19'
+
+    // https://google.github.io/android-testing-support-library/docs/espresso/setup/
+    ESPRESSO_VER = '2.2.2'
+    ANDROID_TEST_SUPPORT_LIBRARY_VER = '0.5'
+}
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}
