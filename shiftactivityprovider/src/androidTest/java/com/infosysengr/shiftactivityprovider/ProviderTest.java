@@ -2,7 +2,6 @@ package com.infosysengr.shiftactivityprovider;
 
 
 import android.content.ContentValues;
-import android.database.ContentObserver;
 import android.database.Cursor;
 import android.net.Uri;
 import android.support.test.InstrumentationRegistry;
@@ -11,7 +10,6 @@ import android.test.ProviderTestCase2;
 import android.test.mock.MockContentResolver;
 import android.test.suitebuilder.annotation.LargeTest;
 
-import com.infosysengr.androidtest.provider.ProviderTestCase3;
 import com.infosysengr.shiftactivityprovider.ShiftActivityDataContract.Shift;
 
 import org.junit.Before;
@@ -67,45 +65,6 @@ public class ProviderTest extends ProviderTestCase2<ShiftActivityProvider> {
         assertThat(newShift, is(notNullValue())); assert newShift != null;
         assertThat(newShift.getAuthority(), equalTo(ShiftActivityDataContract.CONTENT_AUTHORITY));
         assertThat(newShift.getLastPathSegment(), equalTo("2"));
-    }
-
-    @Test
-    public void insert_withValidShiftData_notifiesContentObserversOfNewData() {
-        final TestContentObserver contentObserverSpy = new TestContentObserver();
-        getMockContentResolver().registerContentObserver(ShiftActivityDataContract.SHIFT_CONTENT_URI, true, contentObserverSpy);
-
-        ContentValues newShiftValues = new ContentValues();
-        newShiftValues.put(Shift.Columns.LOCATION_NAME, "Los Angeles, Mid City");
-        final Uri newShift = getMockContentResolver().insert(ShiftActivityDataContract.SHIFT_CONTENT_URI, newShiftValues);
-
-        contentObserverSpy.verifyWasNotified();
-    }
-
-    private class TestContentObserver extends ContentObserver {
-        private boolean wasNotified = false;
-        public TestContentObserver() {
-            super(null);
-        }
-
-        @Override
-        public boolean deliverSelfNotifications() {
-            return true;
-        }
-
-        @Override
-        public void onChange(final boolean selfChange) {
-            super.onChange(selfChange);
-            wasNotified = true;
-        }
-
-        @Override
-        public void onChange(final boolean selfChange, final Uri uri) {
-            onChange(selfChange, uri);
-        }
-
-        public void verifyWasNotified() {
-            assertThat("Expected to be notified, but was not.", wasNotified, equalTo(true));
-        }
     }
 
 }
